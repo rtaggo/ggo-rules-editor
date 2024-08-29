@@ -1,0 +1,75 @@
+{
+  "contentType": "application/vnd.gorules.decision",
+  "nodes": [
+    {
+      "type": "inputNode",
+      "id": "17a8ddb0-c3ae-4e26-a79b-7ec6629a348f",
+      "name": "request",
+      "position": {
+        "x": 175,
+        "y": 155
+      }
+    },
+    {
+      "type": "decisionTableNode",
+      "content": {
+        "hitPolicy": "first",
+        "inputs": [
+          {
+            "id": "62155335-df56-4c7e-a427-65f4f007897b",
+            "name": "user",
+            "field": "user.age"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "9ea6e014-52ba-42e0-8a72-7b68c9b874a4",
+            "name": "Output",
+            "field": "output"
+          }
+        ],
+        "rules": [
+          {
+            "_id": "5a1bada6-7a88-4c7a-b486-2d253eb594b9",
+            "62155335-df56-4c7e-a427-65f4f007897b": "< 18",
+            "9ea6e014-52ba-42e0-8a72-7b68c9b874a4": "\"mineur\""
+          },
+          {
+            "_id": "945567e7-da5c-4b7a-ae70-a7208f46f0be",
+            "62155335-df56-4c7e-a427-65f4f007897b": ">= 18",
+            "9ea6e014-52ba-42e0-8a72-7b68c9b874a4": "\"majeur\""
+          }
+        ]
+      },
+      "id": "4b1de9ee-af9a-4a12-b32c-6b2119ef9131",
+      "name": "decisionTable1",
+      "position": {
+        "x": 620,
+        "y": 230
+      }
+    },
+    {
+      "type": "outputNode",
+      "id": "79143b98-6341-4bc7-985b-0616bf3e2612",
+      "name": "response",
+      "position": {
+        "x": 1090,
+        "y": 210
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "2a0f5ba9-92c7-4a79-b076-ada5d11fda32",
+      "sourceId": "17a8ddb0-c3ae-4e26-a79b-7ec6629a348f",
+      "type": "edge",
+      "targetId": "4b1de9ee-af9a-4a12-b32c-6b2119ef9131"
+    },
+    {
+      "id": "47b896ee-cd20-4f8d-a97a-eeb25313c14d",
+      "sourceId": "4b1de9ee-af9a-4a12-b32c-6b2119ef9131",
+      "type": "edge",
+      "targetId": "79143b98-6341-4bc7-985b-0616bf3e2612"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "customer": {
+    "id": "100551679",
+    "brand": "keRastase"
+  },
+  "territory": {
+    "id": "T1",
+    "stakeholder": "Bob"
+  }
+}

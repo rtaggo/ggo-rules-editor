@@ -1,0 +1,270 @@
+{
+  "contentType": "application/vnd.gorules.decision",
+  "nodes": [
+    {
+      "type": "inputNode",
+      "id": "5c0b324e-1d52-4f36-ac03-97973291559c",
+      "name": "request",
+      "position": {
+        "x": 5,
+        "y": 405
+      }
+    },
+    {
+      "type": "outputNode",
+      "id": "7e244987-6def-4814-a4e7-6a487ffe8729",
+      "name": "response",
+      "position": {
+        "x": 1530,
+        "y": 590
+      }
+    },
+    {
+      "type": "decisionTableNode",
+      "content": {
+        "hitPolicy": "first",
+        "inputs": [
+          {
+            "id": "cc13bd78-06f0-4787-89d7-158e6ce2798e",
+            "name": "Severity",
+            "field": "ticket.severity"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "f2af72e7-1b77-4a51-947b-e03c1bb2cd08",
+            "name": "Flag Severity",
+            "field": "flag.severity"
+          }
+        ],
+        "rules": [
+          {
+            "_id": "8b4c8e80-a5b5-45b5-8e26-640a8a9fb626",
+            "cc13bd78-06f0-4787-89d7-158e6ce2798e": "\"low\"",
+            "f2af72e7-1b77-4a51-947b-e03c1bb2cd08": "\"green\""
+          },
+          {
+            "_id": "4ab82e89-4e6b-4dc2-9c8a-51be5e632858",
+            "cc13bd78-06f0-4787-89d7-158e6ce2798e": "\"medium\"",
+            "f2af72e7-1b77-4a51-947b-e03c1bb2cd08": "\"amber\""
+          },
+          {
+            "_id": "ef6fd49f-0e22-4de0-9393-84c1a56f419f",
+            "cc13bd78-06f0-4787-89d7-158e6ce2798e": "",
+            "f2af72e7-1b77-4a51-947b-e03c1bb2cd08": "\"red\""
+          }
+        ]
+      },
+      "id": "0e1ed945-679f-40c2-9f5f-b94a023b5bcf",
+      "name": "Ticket Severity",
+      "position": {
+        "x": 445,
+        "y": 280
+      }
+    },
+    {
+      "type": "switchNode",
+      "content": {
+        "hitPolicy": "first",
+        "statements": [
+          {
+            "id": "ee211b65-0d68-4eb2-b5d2-7b9f1b91696e",
+            "condition": "ticket.type == 'tech'",
+            "isDefault": false
+          },
+          {
+            "id": "b25f43f2-86c2-4034-94f3-57e990cb62c9",
+            "condition": "ticket.type == 'csm'",
+            "isDefault": false
+          },
+          {
+            "id": "8e4a92a6-4295-48da-8bfd-35e44e8a4396",
+            "condition": "",
+            "isDefault": true
+          }
+        ]
+      },
+      "id": "84969458-26e8-46a0-bb55-58ac777503a1",
+      "name": "Ticket Type",
+      "position": {
+        "x": 345,
+        "y": 620
+      }
+    },
+    {
+      "type": "functionNode",
+      "content": {
+        "source": "import zen from 'zen';\r\n\r\nexport const handler = async (input) => {\r\n  return {error: \"Unable to assign\", reason: \"Unknown support type\"};\r\n};\r\n"
+      },
+      "id": "d90aa7ab-4469-4dca-a328-8bb7f31cdb03",
+      "name": "Error Fn",
+      "position": {
+        "x": 945,
+        "y": 820
+      }
+    },
+    {
+      "type": "functionNode",
+      "content": {
+        "source": "import zen from 'zen';\r\n\r\nexport const handler = async (input) => {\r\n  console.log(input);\r\n  const countFlags = (flag) => Object.values(input?.flag || {}).reduce((acc, curr) => {\r\n    if (curr === flag) return acc + 1;\r\n    return acc;\r\n  }, 0);\r\n  const breakdown = {\r\n    red: countFlags('red'),\r\n    amber: countFlags('amber'),\r\n    green: countFlags('green')\r\n  };\r\n  return { ...input, breakdown};\r\n};\r\n"
+      },
+      "id": "c4bf5b40-5c0b-417e-80ba-309541dfcb7b",
+      "name": "Overall Mapper",
+      "position": {
+        "x": 1060,
+        "y": 430
+      }
+    },
+    {
+      "type": "decisionTableNode",
+      "content": {
+        "hitPolicy": "first",
+        "inputs": [
+          {
+            "id": "975ad6b5-016e-4122-a608-184e015b0ce4",
+            "name": "SLA",
+            "field": "ticket.customer.sla"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "b564f70b-d727-4717-9650-b30a109def2d",
+            "name": "Expected Response",
+            "field": "time.expected"
+          }
+        ],
+        "rules": [
+          {
+            "_id": "a41f3d63-9457-4021-8d35-a0f546b679f8",
+            "975ad6b5-016e-4122-a608-184e015b0ce4": "\"Premium\"",
+            "b564f70b-d727-4717-9650-b30a109def2d": "\"1 day\""
+          },
+          {
+            "_id": "fbf2ef11-1539-4168-a2f6-040a23938e14",
+            "975ad6b5-016e-4122-a608-184e015b0ce4": "\"Freemium\"",
+            "b564f70b-d727-4717-9650-b30a109def2d": "\"3 days\""
+          },
+          {
+            "_id": "115be49a-ae94-4bbe-bfa6-435f63cdd0f0",
+            "975ad6b5-016e-4122-a608-184e015b0ce4": "",
+            "b564f70b-d727-4717-9650-b30a109def2d": "\"2 weeks\""
+          }
+        ]
+      },
+      "id": "f92193a3-33a5-465c-9850-933489efd8db",
+      "name": "R&D",
+      "position": {
+        "x": 700,
+        "y": 505
+      }
+    },
+    {
+      "type": "decisionTableNode",
+      "content": {
+        "hitPolicy": "first",
+        "inputs": [
+          {
+            "id": "975ad6b5-016e-4122-a608-184e015b0ce4",
+            "name": "SLA",
+            "field": "ticket.customer.sla"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "b564f70b-d727-4717-9650-b30a109def2d",
+            "name": "Expected Response",
+            "field": "time.expected"
+          }
+        ],
+        "rules": [
+          {
+            "_id": "a41f3d63-9457-4021-8d35-a0f546b679f8",
+            "975ad6b5-016e-4122-a608-184e015b0ce4": "\"Premium\"",
+            "b564f70b-d727-4717-9650-b30a109def2d": "\"1 day\""
+          },
+          {
+            "_id": "fbf2ef11-1539-4168-a2f6-040a23938e14",
+            "975ad6b5-016e-4122-a608-184e015b0ce4": "\"Freemium\"",
+            "b564f70b-d727-4717-9650-b30a109def2d": "\"2 days\""
+          },
+          {
+            "_id": "115be49a-ae94-4bbe-bfa6-435f63cdd0f0",
+            "975ad6b5-016e-4122-a608-184e015b0ce4": "",
+            "b564f70b-d727-4717-9650-b30a109def2d": "\"1 weeks\""
+          }
+        ]
+      },
+      "id": "69e5ceec-2f67-44a1-b102-a60e3bfcc1b7",
+      "name": "PS/CSM",
+      "position": {
+        "x": 700,
+        "y": 645
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "f3c20616-0e90-4f2c-8637-3a95072645a8",
+      "sourceId": "d90aa7ab-4469-4dca-a328-8bb7f31cdb03",
+      "type": "edge",
+      "targetId": "7e244987-6def-4814-a4e7-6a487ffe8729"
+    },
+    {
+      "id": "36053e3b-1fda-4dae-b5db-d1c1e09da577",
+      "sourceId": "5c0b324e-1d52-4f36-ac03-97973291559c",
+      "type": "edge",
+      "targetId": "0e1ed945-679f-40c2-9f5f-b94a023b5bcf"
+    },
+    {
+      "id": "3d429a66-41dd-4458-a149-0fd26621f834",
+      "sourceId": "5c0b324e-1d52-4f36-ac03-97973291559c",
+      "type": "edge",
+      "targetId": "84969458-26e8-46a0-bb55-58ac777503a1"
+    },
+    {
+      "id": "0649a390-a280-4a4f-8f97-eeabb6704463",
+      "sourceId": "84969458-26e8-46a0-bb55-58ac777503a1",
+      "type": "edge",
+      "targetId": "d90aa7ab-4469-4dca-a328-8bb7f31cdb03",
+      "sourceHandle": "8e4a92a6-4295-48da-8bfd-35e44e8a4396"
+    },
+    {
+      "id": "d771e492-86dd-4b78-af51-fd36674aac1a",
+      "sourceId": "0e1ed945-679f-40c2-9f5f-b94a023b5bcf",
+      "type": "edge",
+      "targetId": "c4bf5b40-5c0b-417e-80ba-309541dfcb7b"
+    },
+    {
+      "id": "0e094d68-e6f9-4ac9-87b8-c464a2e897cb",
+      "sourceId": "c4bf5b40-5c0b-417e-80ba-309541dfcb7b",
+      "type": "edge",
+      "targetId": "7e244987-6def-4814-a4e7-6a487ffe8729"
+    },
+    {
+      "id": "fbf5c5d0-7c1f-4f0b-b5c7-2c4566eb2147",
+      "sourceId": "84969458-26e8-46a0-bb55-58ac777503a1",
+      "type": "edge",
+      "targetId": "f92193a3-33a5-465c-9850-933489efd8db",
+      "sourceHandle": "ee211b65-0d68-4eb2-b5d2-7b9f1b91696e"
+    },
+    {
+      "id": "111c660a-674e-41db-bd22-33a590a028c0",
+      "sourceId": "f92193a3-33a5-465c-9850-933489efd8db",
+      "type": "edge",
+      "targetId": "c4bf5b40-5c0b-417e-80ba-309541dfcb7b"
+    },
+    {
+      "id": "8f094f2f-093c-41ba-9297-33caed090e53",
+      "sourceId": "84969458-26e8-46a0-bb55-58ac777503a1",
+      "type": "edge",
+      "targetId": "69e5ceec-2f67-44a1-b102-a60e3bfcc1b7",
+      "sourceHandle": "b25f43f2-86c2-4034-94f3-57e990cb62c9"
+    },
+    {
+      "id": "4d5d7429-3387-4e20-9e59-aa6c67d7922d",
+      "sourceId": "69e5ceec-2f67-44a1-b102-a60e3bfcc1b7",
+      "type": "edge",
+      "targetId": "c4bf5b40-5c0b-417e-80ba-309541dfcb7b"
+    }
+  ]
+}
