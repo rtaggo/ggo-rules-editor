@@ -23,5 +23,5 @@ WORKDIR /app
 COPY --from=rust-builder /app/target/release/editor ./editor
 COPY --from=react-builder /app/static ./static
 
-EXPOSE 3000
+EXPOSE 8080:8080
 CMD ["./editor"]

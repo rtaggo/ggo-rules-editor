@@ -34,7 +34,7 @@ async fn main() {
         .init();
 
     let host_address = IS_DEVELOPMENT.then_some("127.0.0.1").unwrap_or("0.0.0.0");
-    let listener_address = format!("{host_address}:3000");
+    let listener_address = format!("{host_address}:8080");
 
     let app = Router::new()
         .route("/api/health", get(health))
